@@ -34,5 +34,7 @@ button, input { font: inherit; }
 .horizontal-dimension::before { left: 0; } .horizontal-dimension::after { right: 0; }
 .horizontal-dimension span { position: relative; top: -7px; background: var(--background); padding: 0 9px; font-size: 11px; white-space: nowrap; }
 .result-footer { flex: none; min-height: 25px; max-width: 100%; display: flex; gap: 20px; align-items: center; justify-content: center; color: var(--muted); font-size: 11px; text-align: center; }
+.dpi-control { display: flex; align-items: center; justify-content: center; gap: 9px; }
+.dpi-control input { width: 64px; border: 1px solid #bfc4bc; border-radius: 0; background: transparent; padding: 6px; color: var(--foreground); font-size: 12px; text-align: center; }
 .file-name { max-width: 35vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 600px) { .result-screen { padding: 14px 12px 18px; } .result-heading { margin: 18px 0 16px; } .drawing-area { --side: 65px; --bottom: 45px; } .vertical-dimension { margin-left: 9px; } .vertical-dimension span { font-size: 10px; } .result-footer { flex-direction: column; gap: 4px; } }

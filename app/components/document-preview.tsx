@@ -1,10 +1,16 @@
+import { useState } from "react";
 import { formatDifference, formatMeasure, type FileAnalysis } from "../lib/measurements";
 
 type Props = { analysis: FileAnalysis; previewUrl: string; onReset: () => void };
 
 export default function DocumentPreview({ analysis, previewUrl, onReset }: Props) {
-  const width = analysis.widthMm === undefined ? `${analysis.widthPx} px` : `${formatMeasure(analysis.widthMm)} mm`;
-  const height = analysis.heightMm === undefined ? `${analysis.heightPx} px` : `${formatMeasure(analysis.heightMm)} mm`;
+  const [dpiInput, setDpiInput] = useState("");
+  const dpi = Number(dpiInput.replace(",", "."));
+  const validDpi = dpiInput.trim() !== "" && Number.isFinite(dpi) && dpi > 0;
+  const widthMm = analysis.widthMm ?? (validDpi && analysis.widthPx ? analysis.widthPx / dpi * 25.4 : undefined);
+  const heightMm = analysis.heightMm ?? (validDpi && analysis.heightPx ? analysis.heightPx / dpi * 25.4 : undefined);
+  const width = widthMm === undefined ? "— mm" : `${formatMeasure(widthMm)} mm`;
+  const height = heightMm === undefined ? "— mm" : `${formatMeasure(heightMm)} mm`;
   return <main className="result-screen">
     <button className="reset-button" onClick={onReset}>↺ <span>Reset</span></button>
     <div className="result-heading">
@@ -21,7 +27,10 @@ export default function DocumentPreview({ analysis, previewUrl, onReset }: Props
       <div className="horizontal-dimension"><span>{width}</span></div>
     </div>
     <div className="result-footer">
-      {!analysis.physicalSizeReliable && <span>Tamaño físico no disponible · sin DPI fiable</span>}
+      {!analysis.physicalSizeReliable && <label className="dpi-control">
+        <span>{validDpi ? "Medida calculada con DPI indicado" : "Indica el DPI para calcular los mm"}</span>
+        <input type="text" inputMode="decimal" value={dpiInput} onChange={(event) => setDpiInput(event.target.value)} placeholder="DPI" aria-label="Resolución de la imagen en DPI" />
+      </label>}
       <span className="file-name" title={analysis.name}>{analysis.name}</span>
     </div>
   </main>;
